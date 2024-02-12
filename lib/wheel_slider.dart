@@ -25,6 +25,7 @@ class WheelSlider extends StatefulWidget {
   final double pointerHeight, pointerWidth;
   final Widget background;
   final bool isVibrate;
+  final FixedExtentScrollController? controller;
 
   /// This is a type String, only valid inputs are "default", "light",  "medium", "heavy", "selectionClick".
   final String hapticFeedback;
@@ -51,6 +52,7 @@ class WheelSlider extends StatefulWidget {
 
   WheelSlider({
     Key? key,
+    this.controller,
     this.horizontalListHeight = 50,
     this.horizontalListWidth = double.infinity,
     this.verticalListHeight = 400.0,
@@ -139,6 +141,7 @@ class WheelSlider extends StatefulWidget {
   /// Displays numbers instead of lines.
   WheelSlider.number({
     Key? key,
+    this.controller,
     this.horizontalListHeight = 50,
     this.horizontalListWidth = double.infinity,
     this.verticalListHeight = 400.0,
@@ -206,6 +209,7 @@ class WheelSlider extends StatefulWidget {
   /// Gives you the option to replace with your own custom Widget(s).
   WheelSlider.customWidget({
     Key? key,
+    this.controller,
     this.horizontalListHeight = 50,
     this.horizontalListWidth = double.infinity,
     this.verticalListHeight = 400.0,
@@ -275,8 +279,7 @@ class HapticFeedbackType {
 }
 
 class _WheelSliderState extends State<WheelSlider> {
-  final FixedExtentScrollController _scrollController =
-      FixedExtentScrollController();
+  FixedExtentScrollController _scrollController = FixedExtentScrollController();
 
   Future<int> getItemIndex() async {
     for (int i = 0; i < widget.totalCount; i++) {
@@ -287,12 +290,9 @@ class _WheelSliderState extends State<WheelSlider> {
     return 0;
   }
 
-  void scrollTo(int itemIndex, Duration duration, Curve curve) {
-    _scrollController.animateToItem(itemIndex, duration: duration, curve: curve);
-  }
-
   @override
   void initState() {
+    _scrollController = widget.controller ?? FixedExtentScrollController(initialItem: 0);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       int itemIndex = await getItemIndex();
       if (_scrollController.hasClients) {
