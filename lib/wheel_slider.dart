@@ -295,6 +295,9 @@ class _WheelSliderState extends State<WheelSlider> {
     if (widget.controller != null) {
       print("widget controller imported");
     }
+    else {
+      print("using default");
+    }
     _scrollController = widget.controller ?? FixedExtentScrollController(initialItem: 0);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       int itemIndex = await getItemIndex();
