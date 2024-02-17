@@ -279,7 +279,7 @@ class HapticFeedbackType {
 }
 
 class _WheelSliderState extends State<WheelSlider> {
-  FixedExtentScrollController _scrollController = FixedExtentScrollController();
+  FixedExtentScrollController? _scrollController;
 
   Future<int> getItemIndex() async {
     for (int i = 0; i < widget.totalCount; i++) {
@@ -295,12 +295,12 @@ class _WheelSliderState extends State<WheelSlider> {
     _scrollController = widget.controller ?? FixedExtentScrollController(initialItem: 0);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       int itemIndex = await getItemIndex();
-      if (_scrollController.hasClients) {
+      if (_scrollController != null && _scrollController!.hasClients) {
         if (widget.enableAnimation) {
-          _scrollController.animateToItem(itemIndex,
+          _scrollController!.animateToItem(itemIndex,
               duration: widget.animationDuration, curve: widget.animationType);
         } else {
-          _scrollController.jumpToItem(
+          _scrollController!.jumpToItem(
             itemIndex,
           );
         }
@@ -311,7 +311,9 @@ class _WheelSliderState extends State<WheelSlider> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    if (_scrollController != null) {
+      _scrollController!.dispose();
+    }
     super.dispose();
   }
 
