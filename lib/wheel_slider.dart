@@ -292,6 +292,9 @@ class _WheelSliderState extends State<WheelSlider> {
 
   @override
   void initState() {
+    if (widget.controller != null) {
+      print("widget controller imported");
+    }
     _scrollController = widget.controller ?? FixedExtentScrollController(initialItem: 0);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       int itemIndex = await getItemIndex();
